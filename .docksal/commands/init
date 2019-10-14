@@ -37,7 +37,7 @@ fin project start
 # Install project requirements
 fin exec composer clear-cache
 fin exec COMPOSER_PROCESS_TIMEOUT=2000
-fin exec composer install
+fin exec COMPOSER_MEMORY_LIMIT=-1 composer install
 
 # Set up blt
 cd $DOCROOT_PATH
