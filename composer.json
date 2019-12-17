@@ -4,11 +4,11 @@
     "description": "Project template for Drupal 8 sites built with BLT.",
     "license": "GPL-2.0-only",
     "require": {
-        "php": ">=7.1",
-        "acquia/blt": "^10.5.0",
+        "acquia/blt": "^11.0.0",
         "acquia/drupal-spec-tool": "*",
         "acquia/lightning": "^4.0.0",
         "acquia/memcache-settings": "*",
+        "drupal-composer/drupal-scaffold": "^2.5.4",
         "drupal/acquia_connector": "^1.5.0",
         "drupal/acquia_purge": "^1.0-beta3",
         "drupal/cog": "^1.0.0",
@@ -19,10 +19,11 @@
         "drupal/features": "^3.8.0",
         "drupal/qa_accounts": "^1.0.0-alpha1",
         "drupal/seckit": "^1.0.0-alpha2",
-        "drupal/shield": "^1.2.0"
+        "drupal/shield": "^1.2.0",
+        "php": ">=7.1"
     },
     "require-dev": {
-        "acquia/blt-require-dev": "^10.0.0-alpha1"
+        "acquia/blt-require-dev": "11.x-dev"
     },
     "config": {
         "platform": {
