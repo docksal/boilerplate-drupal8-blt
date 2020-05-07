@@ -23,9 +23,9 @@ jobs:
       - run: composer install
       - run: echo "Run linting" #&& composer lint
       - run: echo "Build assets for testing" #&& composer build-assets
-      - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
+    #  - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
       - run: echo "Get the database backup for testing"
-      - run: ./scripts/acquia/acquia-get-db-backup.sh $ACQUIA_REALM:$ACQUIA_SITE $ACQUIA_CANONICAL_ENV $ACQUIA_SITE
+    #  - run: ./scripts/acquia/acquia-get-db-backup.sh $ACQUIA_REALM:$ACQUIA_SITE $ACQUIA_CANONICAL_ENV $ACQUIA_SITE
       - run: echo "Import database"
       - run: service mysql start
       - run: drush fresh
