@@ -28,14 +28,14 @@ jobs:
     #  - run: ./scripts/acquia/acquia-get-db-backup.sh $ACQUIA_REALM:$ACQUIA_SITE $ACQUIA_CANONICAL_ENV $ACQUIA_SITE
       - run: echo "Import database"
       - run: service mysql start
-      - run: drush fresh
+    #  - run: drush fresh
       - run: echo "Run build scripts"
     #  - run: drush local
       - run: echo "Run tests"
-    #  - run: sudo echo '127.0.0.1       project.local' >> /etc/hosts
-    #  - run: service apache2 start
-    #  - run: chown -R root:www-data ./docroot
-      - run: curl "http://boilerplate-drupal8-blt.docksal" 
+      - run: sudo echo '127.0.0.1       project.local' >> /etc/hosts
+      - run: service apache2 start
+      - run: chown -R root:www-data ./docroot
+      - run: curl "http://project.local" 
 
   dev-deploy:
     <<: *defaults  
