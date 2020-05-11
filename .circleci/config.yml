@@ -4,6 +4,7 @@ defaults: &defaults
     - image: fourkitchens/ubuntu-1604-php72-node10-apache
   environment:
     DATE_TIMEZONE: America/New_York
+    DATE_TIME: `date +%Y%m%d`
     TERM: xterm
     ACQUIA_CANONICAL_ENV: dev
     ACQUIA_ENDPOINT: https://cloudapi.acquia.com/v1
@@ -45,8 +46,8 @@ jobs:
       - run: "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
       - run: npm install
       - run: composer install
-      - run: echo "build assets for deploying" #&& composer build-assets
-      - run: echo "deploying to the $circle_branch on acquia."
+      - run: echo "Build assets for deploying with BLT" #&& composer build-assets
+      - run: echo "Deploying to the $circle_branch on acquia."
       - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
       - run: git config --global user.name "$ACQUIA_BOT_NAME"
       - run: git remote add acquia $ACQUIA_REPO
@@ -65,6 +66,7 @@ jobs:
       # Commit and push to Acquia.
       - run: git add .
       - run: git commit -am "Built assets."
+      - run: git tag -a git tag -a $DATE_TIME.$CIRCLE_BUILD_NUM
       - run: git push acquia $CIRCLE_BRANCH -f --tags
       - run: echo "If deployment was successful, Acquia Cloud dev/post-code-update hook will handle importing config, updating db, and clearing caches."
 
