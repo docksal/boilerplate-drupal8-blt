@@ -21,8 +21,8 @@ jobs:
       - checkout
       - run: npm install
       - run: composer install
-      - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias -n
-      - run: echo "Run linting with BLT" && ./vendor/bin/blt validate:all
+      - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias --no-interaction
+      - run: echo "Run linting with BLT" && ./vendor/bin/blt validate:all --no-interaction
       - run: echo "Build assets for testing with BLT" #&& blt drupal:sync
     #  - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
       - run: echo "Get the database backup for testing with BLT"
