@@ -97,6 +97,7 @@ workflows:
             branches:
               only:
                 - develop
+                - master
       - hold:
           type: approval
           requires:
