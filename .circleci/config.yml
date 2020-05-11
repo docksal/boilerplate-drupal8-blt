@@ -46,7 +46,6 @@ jobs:
       - run: npm install
       - run: composer install
       - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias --no-interaction
-      - run: echo "Build assets for deploying with BLT" && ./vendor/bin/blt artifact:build --no-interaction
       - run: echo "Deploying to the $circle_branch on acquia." && ./vendor/bin/blt artifact:deploy --no-interaction 
       - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
       - run: git config --global user.name "$ACQUIA_BOT_NAME"
@@ -64,6 +63,7 @@ jobs:
       # symlinks to be ignored. If it's already not there, GREAT!
       # - rm ./vendor/simplesamlphp/simplesamlphp/.gitignore || exit 0
       # Commit and push to Acquia.
+      - run: echo "Build assets for deploying with BLT" && ./vendor/bin/blt artifact:build --no-interaction
       - run: git add .
       - run: DATE_TIME=`date +%Y%m%d`
       - run: git commit -am "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
