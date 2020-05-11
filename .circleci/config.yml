@@ -101,9 +101,13 @@ workflows:
       - hold:
           type: approval
           requires:
+            - build
             - dev-deploy
       - stage-deploy:
+          context: my-restricted-context
           requires:
+            - build
+            - hold
             - dev-deploy
           filters:
             branches:
