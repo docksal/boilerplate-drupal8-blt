@@ -5,13 +5,13 @@ defaults: &defaults
   environment:
     DATE_TIMEZONE: America/New_York
     TERM: xterm
-    ACQUIA_CANONICAL_ENV: prod
+    ACQUIA_CANONICAL_ENV: dev
     ACQUIA_ENDPOINT: https://cloudapi.acquia.com/v1
     ACQUIA_REALM: devcloud
     ACQUIA_SITE: s5ea988db29353
     ACQUIA_REPO: s5ea988db29353@svn-2420.devcloud.hosting.acquia.com:s5ea988db29353.git
     ACQUIA_BOT_EMAIL: pipeline@circleci.com
-    ACQUIA_BOT_NAME: "Pipeline Server"
+    ACQUIA_BOT_NAME: "Demo Pipeline Server"
   working_directory: ~/project
 
 jobs:
@@ -21,10 +21,11 @@ jobs:
       - checkout
       - run: npm install
       - run: composer install
-      - run: echo "Run linting" #&& composer lint
-      - run: echo "Build assets for testing" #&& composer build-assets
+      - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias --no-interaction
+      - run: echo "Run linting with BLT" #&& ./vendor/bin/blt validate:all --no-interaction
+      - run: echo "Build assets for testing with BLT" #&& blt drupal:sync
     #  - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
-      - run: echo "Get the database backup for testing"
+      - run: echo "Get the database backup for testing with BLT"
     #  - run: ./scripts/acquia/acquia-get-db-backup.sh $ACQUIA_REALM:$ACQUIA_SITE $ACQUIA_CANONICAL_ENV $ACQUIA_SITE
       - run: echo "Import database"
       - run: service mysql start
@@ -44,6 +45,8 @@ jobs:
       - run: "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
       - run: npm install
       - run: composer install
+      - run: echo "Build assets for deploying with BLT" #&& composer build-assets
+      - run: echo "Deploying to the $circle_branch on acquia."
       - run: echo "build assets for deploying" #&& composer build-assets
       - run: echo "deploying to the $circle_branch on acquia."
       - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
@@ -63,7 +66,9 @@ jobs:
       # - rm ./vendor/simplesamlphp/simplesamlphp/.gitignore || exit 0
       # Commit and push to Acquia.
       - run: git add .
-      - run: git commit -am "Built assets."
+      - run: DATE_TIME=`date +%Y%m%d`
+      - run: git commit -am "${DATE_TIME}.${CIRCLE_BUILD_NUM} Pipeline Build"
+      - run: git tag -a git tag -a $DATE_TIME.$CIRCLE_BUILD_NUM
       - run: git push acquia $CIRCLE_BRANCH -f --tags
       - run: echo "If deployment was successful, Acquia Cloud dev/post-code-update hook will handle importing config, updating db, and clearing caches."
 
@@ -95,6 +100,10 @@ workflows:
             branches:
               only:
                 - develop
+      - hold:
+          type: approval
+          requires:
+            - dev-deploy
       - stage-deploy:
           requires:
             - dev-deploy
