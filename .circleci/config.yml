@@ -47,6 +47,8 @@ jobs:
       - run: composer install
       - run: echo "Build assets for deploying with BLT" #&& composer build-assets
       - run: echo "Deploying to the $circle_branch on acquia."
+      - run: echo "build assets for deploying" #&& composer build-assets
+      - run: echo "deploying to the $circle_branch on acquia."
       - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
       - run: git config --global user.name "$ACQUIA_BOT_NAME"
       - run: git remote add acquia $ACQUIA_REPO
