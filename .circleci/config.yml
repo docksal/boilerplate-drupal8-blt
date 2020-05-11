@@ -21,11 +21,12 @@ jobs:
       - checkout
       - run: npm install
       - run: composer install
-      - run: echo "Install BLT" && blt
-      - run: echo "Run linting" #&& composer lint
-      - run: echo "Build assets for testing" #&& composer build-assets
+      - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias -n
+      - run: source /root/.bashrc
+      - run: echo "Run linting with BLT" && blt validate:all
+      - run: echo "Build assets for testing with BLT" #&& blt drupal:sync
     #  - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
-      - run: echo "Get the database backup for testing"
+      - run: echo "Get the database backup for testing with BLT"
     #  - run: ./scripts/acquia/acquia-get-db-backup.sh $ACQUIA_REALM:$ACQUIA_SITE $ACQUIA_CANONICAL_ENV $ACQUIA_SITE
       - run: echo "Import database"
       - run: service mysql start
