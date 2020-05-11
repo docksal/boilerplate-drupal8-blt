@@ -67,8 +67,8 @@ jobs:
       # Commit and push to Acquia.
       - run: git add .
       - run: DATE_TIME=`date +%Y%m%d`
-      - run: git commit -am "${DATE_TIME}.${CIRCLE_BUILD_NUM} Pipeline Build"
-      - run: git tag -a ${DATE_TIME}.${CIRCLE_BUILD_NUM}
+      - run: git commit -am "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
+      - run: git tag -a ${DATE_TIME}_${CIRCLE_BUILD_NUM}
       - run: git push acquia $CIRCLE_BRANCH -f --tags
       - run: echo "If deployment was successful, Acquia Cloud dev/post-code-update hook will handle importing config, updating db, and clearing caches."
 
