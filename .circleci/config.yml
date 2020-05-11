@@ -4,7 +4,6 @@ defaults: &defaults
     - image: fourkitchens/ubuntu-1604-php72-node10-apache
   environment:
     DATE_TIMEZONE: America/New_York
-    DATE_TIME: `date +%Y%m%d`
     TERM: xterm
     ACQUIA_CANONICAL_ENV: dev
     ACQUIA_ENDPOINT: https://cloudapi.acquia.com/v1
@@ -66,6 +65,7 @@ jobs:
       # Commit and push to Acquia.
       - run: git add .
       - run: git commit -am "Built assets."
+      - run: DATE_TIME=`date +%Y%m%d`
       - run: git tag -a git tag -a $DATE_TIME.$CIRCLE_BUILD_NUM
       - run: git push acquia $CIRCLE_BRANCH -f --tags
       - run: echo "If deployment was successful, Acquia Cloud dev/post-code-update hook will handle importing config, updating db, and clearing caches."
