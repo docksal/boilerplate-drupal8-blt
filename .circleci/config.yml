@@ -47,7 +47,7 @@ jobs:
       - run: composer install
       - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias --no-interaction
       - run: echo "Build assets for deploying with BLT" && ./vendor/bin/blt artifact:build --no-interaction
-      - run: echo "Deploying to the $circle_branch on acquia." && ./vendor/bin/blt artifact:deploy --dry-run 
+      - run: echo "Deploying to the $circle_branch on acquia." && ./vendor/bin/blt artifact:deploy --no-interaction 
       - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
       - run: git config --global user.name "$ACQUIA_BOT_NAME"
       - run: git remote add acquia $ACQUIA_REPO
