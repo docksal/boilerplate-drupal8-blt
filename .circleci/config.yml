@@ -98,6 +98,10 @@ workflows:
             branches:
               only:
                 - develop
+      - hold:
+          type: approval
+          requires:
+            - dev-deploy
       - stage-deploy:
           requires:
             - dev-deploy
