@@ -65,7 +65,7 @@ jobs:
       # Commit and push to Acquia.
       - run: echo "Deploying to the $circle_branch on acquia." #&& ./vendor/bin/blt artifact:deploy --no-interaction 
       - run: git add .
-      - run: DATE_TIME=`date +%Y%m%d`
+      - run: DATE_TIME=$(date +%Y%m%d)
       - run: git commit -am "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
       - run: git tag -a ${DATE_TIME}_${CIRCLE_BUILD_NUM} -m "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
       - run: git push acquia $CIRCLE_BRANCH -f --tags
