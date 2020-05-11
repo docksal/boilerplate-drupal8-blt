@@ -21,7 +21,7 @@ jobs:
       - checkout
       - run: npm install
       - run: composer install
-      - run: echo "BLT install" && ./vendor/bin/blt blt:init:shell-alias -n && source /root/.bashrc && blt
+      - run: echo "Install BLT" && blt
       - run: echo "Run linting" #&& composer lint
       - run: echo "Build assets for testing" #&& composer build-assets
     #  - run: cp .circleci/settings.local.php ./docroot/sites/default/settings.local.php
