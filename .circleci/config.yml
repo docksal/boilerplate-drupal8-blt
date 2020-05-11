@@ -5,6 +5,7 @@ defaults: &defaults
   environment:
     DATE_TIMEZONE: America/New_York
     TERM: xterm
+    ACQUIA_CANONICAL_ENV: dev
     ACQUIA_ENDPOINT: https://cloudapi.acquia.com/v1
     ACQUIA_REALM: devcloud
     ACQUIA_SITE: s5ea988db29353
@@ -38,9 +39,7 @@ jobs:
       - run: curl "http://project.local" 
 
   dev-deploy:
-    <<: *defaults 
-    environment:
-      ACQUIA_CANONICAL_ENV: dev
+    <<: *defaults  
     steps:
       - checkout
       - run: "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
@@ -74,38 +73,17 @@ jobs:
 
   stage-deploy:
     <<: *defaults  
-    environment:
-      ACQUIA_CANONICAL_ENV: stage
     steps:
       - checkout
-      - run: "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
-      - run: npm install
-      - run: composer install
-      - run: echo "Install BLT" && ./vendor/bin/blt blt:init:shell-alias --no-interaction
-      - run: echo "Build assets for deploying with BLT" && ./vendor/bin/blt artifact:build --no-interaction
-      - run: git config --global user.email "$ACQUIA_BOT_EMAIL"
-      - run: git config --global user.name "$ACQUIA_BOT_NAME"
-      - run: git remote add acquia $ACQUIA_REPO
-      - run: ssh-keyscan -H $(echo "$ACQUIA_REPO" | sed 's/.*@\(.*\):.*/\1/') >> ~/.ssh/known_hosts
-      - run: git fetch acquia
-      - run: "sed -i '1,/######## ACQUIA IGNORE BELOW THIS LINE ########/d' .gitignore"
-      # remove any .git directories that may exist in vendor libraries* so those
-      # libraries don't get excluded from our repo. Remember kiddies somedir/*
-      # returns all files/dirs that are NOT dot (hidden). This protects our repos'
-      # .git folder from being blown away.
-      - run: find ./* -type d | grep .git | xargs rm -rf
-      # Remove unwanted gitignores here. Follow the example below.
-      # Remove simplesamlphp .gitignore which would cause our config and metadata
-      # symlinks to be ignored. If it's already not there, GREAT!
-      # - rm ./vendor/simplesamlphp/simplesamlphp/.gitignore || exit 0
-      # Commit and push to Acquia.
-      - run: echo "Deploying to the $circle_branch on acquia." #&& ./vendor/bin/blt artifact:deploy --no-interaction 
-      - run: git add .
-      - run: DATE_TIME=$(date +%Y%m%d)
-      - run: git commit -am "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
-      - run: git tag -a ${DATE_TIME}_${CIRCLE_BUILD_NUM} -m "${DATE_TIME}_${CIRCLE_BUILD_NUM} Pipeline Build"
-      - run: git push acquia $CIRCLE_BRANCH -f --tags
-      - run: echo "If deployment was successful, Acquia Cloud dev/post-code-update hook will handle importing config, updating db, and clearing caches."
+      - run: echo "Initiating Staging Deployment"
+      - run: mkdir -p my_workspace
+      - run: echo "Staging Deployment Steps" > my_workspace/echo-output
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory
+          root: my_workspace
+          # Must be relative path from root
+          paths:
+            - echo-output
 
 workflows:
   version: 2
